@@ -1,0 +1,33 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Web
+@namespace FOMessenger.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <base href="~/" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/shorts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body style="background: #121212; /* Fallback for browsers that don't support gradients */ background: linear-gradient( 135deg, #0b0b0b 25%, #121212 25%, #121212 50%, #0b0b0b 50%, #0b0b0b 75%, #121212 75%, #121212 ); background-size: 40px 40px; color: #8e00e7; /* Animation */ animation: move 4s linear infinite;">
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+    <div id="blazor-error-ui" style="width: 100%; z-index: 1000; position: absolute; top: 50%; left: 0; text-align: center;">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
+

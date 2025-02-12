@@ -1,0 +1,45 @@
+﻿<div class="Navbar smooth" id="Navbar">
+    <div class="Navbar-div-left smooth">
+        <a onclick="location.href='/'" class="Navbar-left-text cursor-pointer select-none smooth my-text-glow-white">FOM</a>
+    </div>
+    <div class="Navbar-div-right smooth">
+        @if (IsAuthorized)
+        {
+            <a style="z-index: 20;" class="cursor-pointer select-none smooth" @onclick="ToggleMenu"><i class="material-icons Navbar-div-profileicon my-text-glow-white smooth">account_circle</i><img /></a>
+            <div class="Navbar-menu no-smooth" style="visibility:@(IsVisible ? "visible" : "hidden"); z-index: 10;">
+                <span @onclick="ToggleMenu" class="material-icons cursor-pointer" style="color: red; overflow: visible; width: auto; height: 0; position: absolute; top: 0; right: 0; padding: 0vh 1vh; font-size: 2rem">X</span>
+                <a onclick="location.href='/profile'" class="Navbar-menu-text cursor-pointer select-none text-green-300 border-green-300">Profile</a>
+                <a onclick="location.href='/settings'" class="Navbar-menu-text cursor-pointer select-none text-green-300 border-green-300">Settings</a>
+                <a @onclick="Menu_Logout_clicked" class="Navbar-menu-text cursor-pointer select-none text-green-300 border-green-300">Logout</a>
+            </div>
+        }
+        @if (!IsAuthorized)
+        {
+            <div class="Navbar-div-right-buttons smooth">
+                <button onclick="location.href='/login'" style="z-index: 20;" class="Navbar-div-button my-box-glow-white smooth">Login</button>
+                <button onclick="location.href='/register'" style="z-index: 20;" class="Navbar-div-button my-box-glow-white smooth">Register</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    protected bool IsVisible { get; set; } = false;
+    private bool IsAuthorized { get; set; } = false;
+
+    public void ToggleMenu() => IsVisible = !IsVisible;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //saves if the user is authorized in a var
+        //IsAuthorized = await service.IsUserAuthorizedAsync();
+    }
+
+    //-----------event Methods----------------//
+    public async void Menu_Logout_clicked()
+    {
+        //Logout logic i guess
+        //await service.LogoutAsync();
+        //NavMan.NavigateTo(NavMan.BaseUri, forceLoad: true);
+    }
+}
