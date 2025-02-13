@@ -1,9 +1,29 @@
 ﻿@page "/"
+@implements IDisposable
 @inject DatabaseHandler DBHandler;
 @inject LocalStorageHandler LocalStorage;
 
 <Navbar></Navbar>
 
 @code{
+    public Guid guid = Guid.NewGuid();
 
+    // page opened
+    protected override void OnInitialized()
+    {
+        Global.Logger.LogInformation($"{guid} - Page Opened.");
+        DBHandler.OpenConnection(); // test
+        base.OnInitialized();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
+    // page closed
+    public void Dispose(){
+        DBHandler.CloseConnection(); // test
+        Global.Logger.LogInformation($"{guid} - Page Closed");
+    }
 }

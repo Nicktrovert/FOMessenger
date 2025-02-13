@@ -4,7 +4,7 @@ namespace FOMessenger.Code.Storage.Database
 {
     public partial class DatabaseHandler : IDisposable, IAsyncDisposable
     {
-        public MySqlConnection DatabaseConnection { get; set; }
+        public MySqlConnection? DatabaseConnection { get; set; }
 
         public DatabaseHandler() 
         {
@@ -29,6 +29,8 @@ namespace FOMessenger.Code.Storage.Database
         // Make sure the connection closes if the object is Disposed (manually or automatically)
         public void Dispose()
         {
+            if (DatabaseConnection == null) return;
+
             if (DatabaseConnection.State == System.Data.ConnectionState.Open) 
             {
                 DatabaseConnection.Close();
