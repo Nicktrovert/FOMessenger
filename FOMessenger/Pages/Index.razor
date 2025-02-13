@@ -14,7 +14,6 @@
     protected override void OnInitialized()
     {
         Global.Logger.LogInformation($"{guid} - Page Opened.");
-        DBHandler.OpenConnection(); // test
         base.OnInitialized();
     }
 
@@ -33,7 +32,6 @@
 
     // page closed
     public void Dispose(){
-        DBHandler.CloseConnection(); // test
         Global.Logger.LogInformation($"{guid} - Page Closed");
     }
 }
