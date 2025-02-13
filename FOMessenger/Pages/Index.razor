@@ -5,7 +5,12 @@
 
 <Navbar></Navbar>
 
-<button class="MyButton cursor-pointer" @onclick="TestInsertUser">Test InsertUser</button>
+<div class="flex-column justify-center align-center">
+    @for (int i = 0; i < 30; i++)
+    {
+        <button class="MyButton cursor-pointer" @onclick="TestInsertUser">Test InsertUser</button>
+    }
+</div>
 
 @code{
     public Guid guid = Guid.NewGuid();

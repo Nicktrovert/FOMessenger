@@ -22,6 +22,7 @@ namespace FOMessenger.Code.Storage.Database
             MySqlCommand cmd = new MySqlCommand(command, DatabaseConnection);
             cmd.ExecuteNonQuery();
             cmd.Dispose();
+            Global.Logger.LogInformation($"User created with username: \"{user.Username}\".");
         }
 
         public void DeleteUser(string username)
