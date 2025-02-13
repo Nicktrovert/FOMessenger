@@ -5,6 +5,8 @@
 
 <Navbar></Navbar>
 
+<button class="MyButton cursor-pointer" @onclick="TestInsertUser">Test InsertUser</button>
+
 @code{
     public Guid guid = Guid.NewGuid();
 
@@ -19,6 +21,14 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
+    }
+
+    public void TestInsertUser()
+    {
+        DBHandler.OpenConnection();
+        User user = new User("Nicktrovert", Hasher.Hash("VeryGoodPassword123!"), "MyMail1@gmail.com", "Nick", "Helmers", new DateOnly(2007, 04, 29));
+        DBHandler.InsertUser(user);
+        DBHandler.CloseConnection();
     }
 
     // page closed

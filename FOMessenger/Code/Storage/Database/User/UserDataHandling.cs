@@ -1,4 +1,5 @@
 ﻿using FOMessenger.Code.User;
+using MySql.Data.MySqlClient;
 
 namespace FOMessenger.Code.Storage.Database
 {
@@ -13,7 +14,14 @@ namespace FOMessenger.Code.Storage.Database
 
         public void InsertUser(User.User user)
         {
-            throw new NotImplementedException();
+            string command = $"INSERT INTO `users` " +
+                $"(`Username`, `Password`, `Email`, `FirstName`, `LastName`, `Birthdate`) " +
+                $"VALUES ('{user.Username}', '{user.HashedPassword}', '{user.Email}'," +
+                $" '{user.FirstName}', '{user.LastName}', '{user.Birthdate.ToString("yyyy-MM-dd")}');";
+
+            MySqlCommand cmd = new MySqlCommand(command, DatabaseConnection);
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
         }
 
         public void DeleteUser(string username)

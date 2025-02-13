@@ -45,10 +45,10 @@ body {
 
 .MyButton {
     transition: ease-in-out 0.25s;
-    background-color: #121212;
+    background-color: var(--Violet);
     padding: 0.5%;
-    color: #8e00e7;
-    border: 1px solid #490078;
+    color: var(--DefaultTextColor);
+    border: 1px solid var(--Violet);
     font-size: calc(100% - 0.1rem);
     border-radius: 10px;
     height: 5rem;
