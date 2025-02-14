@@ -1,6 +1,6 @@
 ﻿@page "/"
 @implements IDisposable
-@inject DatabaseHandler DBHandler;
+@inject DatabaseManager DBMan;
 @inject LocalStorageHandler LocalStorage;
 @inject NavigationManager NavMan;
 
@@ -20,17 +20,6 @@
     protected override void OnInitialized()
     {
         Global.Logger.LogInformation($"{guid} - Page Opened.");
-        Uri uri = NavMan.ToAbsoluteUri(NavMan.Uri);
-        Global.Logger.LogCritical($"Query: {uri.Query}");
-        var kvq = QueryParser.ParseQuery(uri.Query);
-        if (kvq.TryGetValue("name", out var outvalue))
-        {
-            Global.Logger.LogCritical($"Query - Name: {outvalue}");
-        }
-        if (kvq.TryGetValue("age", out var outvalue2))
-        {
-            Global.Logger.LogCritical($"Query - Age: {outvalue2}");
-        }
         base.OnInitialized();
     }
 
@@ -41,10 +30,10 @@
 
     public void TestInsertUser()
     {
-        DBHandler.OpenConnection();
+        DBMan.OpenConnection();
         User user = new User("Nicktrovert", Hasher.Hash("VeryGoodPassword123!"), "MyMail1@gmail.com", "Nick", "Helmers", new DateOnly(2007, 04, 29));
-        DBHandler.InsertUser(user);
-        DBHandler.CloseConnection();
+        DBMan.InsertUser(user);
+        DBMan.CloseConnection();
     }
 
     // page closed

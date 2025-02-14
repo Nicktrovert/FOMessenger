@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<LocalStorageHandler>();
-builder.Services.AddScoped<DatabaseHandler>();
+builder.Services.AddScoped<DatabaseManager>();
 
 var app = builder.Build();
 
