@@ -2,6 +2,7 @@
 @implements IDisposable
 @inject DatabaseHandler DBHandler;
 @inject LocalStorageHandler LocalStorage;
+@inject NavigationManager NavMan;
 
 <Navbar></Navbar>
 
@@ -19,6 +20,17 @@
     protected override void OnInitialized()
     {
         Global.Logger.LogInformation($"{guid} - Page Opened.");
+        Uri uri = NavMan.ToAbsoluteUri(NavMan.Uri);
+        Global.Logger.LogCritical($"Query: {uri.Query}");
+        var kvq = QueryParser.ParseQuery(uri.Query);
+        if (kvq.TryGetValue("name", out var outvalue))
+        {
+            Global.Logger.LogCritical($"Query - Name: {outvalue}");
+        }
+        if (kvq.TryGetValue("age", out var outvalue2))
+        {
+            Global.Logger.LogCritical($"Query - Age: {outvalue2}");
+        }
         base.OnInitialized();
     }
 

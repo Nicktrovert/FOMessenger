@@ -1,0 +1,30 @@
+﻿@page "/login"
+@inject NavigationManager NavMan;
+
+
+
+<div class="login no-smooth">
+    <div class="login-div smooth">
+        <div class="login-form my-box-glow-green smooth">
+            <a class="login-form-element login-form-text smooth">Login</a>
+            <input @bind-value="username_input" required @oninput="(EventArgs) => { username_input = (EventArgs.Value.ToString() ?? String.Empty);}" placeholder="Username" type="text" class="login-form-element smooth" />
+            <input @bind-value="password_input" required @oninput="(EventArgs) => { password_input = (EventArgs.Value.ToString() ?? String.Empty);}" placeholder="Password" type="password" class="login-form-element smooth" />
+            <hr class="smooth" style="background-color: var(--Violet); border-radius: 1em; border-width: 2px; border-style: solid; border-color: var(--Violet);" />
+            <button @onclick="Login_clicked" class="login-form-element login-form-button smooth">Login</button>
+        </div>
+    </div>
+</div>
+@code {
+    public string username_input = "";
+    public string password_input = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    public void Login_clicked()
+    {
+        
+    }
+}
