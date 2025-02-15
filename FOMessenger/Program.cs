@@ -12,6 +12,9 @@ builder.Services.AddScoped<DatabaseManager>();
 
 var app = builder.Build();
 
+app.Urls.Add("http://*:34567");
+app.Urls.Add("https://*:34568");
+
 if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
