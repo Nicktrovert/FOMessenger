@@ -17,5 +17,24 @@ namespace FOMessenger.Code.Storage.Database
 
             Global.Logger.LogInformation($"Inserted user:{user.Username} into the `userActivities` table.");
         }
+
+        private void RetrieveUserFromUserActivities(string username, ref User.User user)
+        {
+            string command = $"SELECT * FROM `useractivities` WHERE `Username` LIKE '{username}';";
+
+            MySqlCommand cmd = new MySqlCommand(command, DatabaseConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                UserActivityState activityState = Enum.Parse<UserActivityState>(reader.GetString(1));
+                DateTime lastOnline = reader.GetDateTime(2);
+
+                user.ActivityState = activityState;
+                user.LastOnline = lastOnline;
+            }
+
+            Global.Logger.LogInformation($"Retrieved user:\"{username}\" from the `userActivities` table.");
+        }
     }
 }

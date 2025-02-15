@@ -4,9 +4,9 @@ namespace FOMessenger.Code.Storage.Database
 {
     public partial class DatabaseManager : IDisposable, IAsyncDisposable
     {
-        private const string HOST = "localhost";
-        private const string USERNAME = "root";
-        private const string PASSWORD = "";
+        private const string HOST = "192.168.178.37";
+        private const string USERNAME = "admin";
+        private const string PASSWORD = "iq0t]DlmOhQKhWRw";
         private const string DATABASE = "fom";
 
         public MySqlConnection? DatabaseConnection { get; set; }
@@ -20,7 +20,7 @@ namespace FOMessenger.Code.Storage.Database
                 string connectionString = $"Host={HOST}; Username={USERNAME}; Password='{PASSWORD}'; Database={DATABASE}";
                 DatabaseConnection = new MySqlConnection(connectionString);
                 DatabaseConnection.Open();
-                Global.Logger.LogInformation("Connection to the database established.");
+                Global.Logger.LogInformation("Connection to the database established and opened.");
             }
             else if (DatabaseConnection.State != System.Data.ConnectionState.Open)
             {

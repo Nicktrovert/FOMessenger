@@ -7,8 +7,28 @@ namespace FOMessenger.Code.Storage.Database
     {
         public bool DoesUserExist(string username)
         {
-            throw new NotImplementedException();
+            Global.Logger.LogInformation($"Checking if user:\"{username}\" exists...");
 
+            string commandUsers = $"SELECT COUNT(1) FROM `users` WHERE `Username` LIKE '{username}';";
+            MySqlCommand cmdUsers = new MySqlCommand(commandUsers, DatabaseConnection);
+            MySqlDataReader readerUsers = cmdUsers.ExecuteReader();
+            readerUsers.Read();
+
+            string commandUserActivities = $"SELECT COUNT(1) FROM `users` WHERE `Username` LIKE '{username}';";
+            MySqlCommand cmUserActivities = new MySqlCommand(commandUserActivities, DatabaseConnection);
+            MySqlDataReader readerUserActivities = cmUserActivities.ExecuteReader();
+            readerUserActivities.Read();
+
+            while (readerUserActivities.Read() && readerUsers.Read())
+            {
+                Global.Logger.LogInformation($"Checked if user:\"{username}\" exists.");
+
+                // todo - Add logic to fix database if only one of the tables includes the user.
+
+                return readerUsers.GetBoolean(0) && readerUserActivities.GetBoolean(0);
+            }
+
+            Global.Logger.LogError("DoesUserExists couldn't read anything.");
             return false;
         }
 
@@ -23,7 +43,7 @@ namespace FOMessenger.Code.Storage.Database
             cmd.ExecuteNonQuery();
             cmd.Dispose();
 
-            Global.Logger.LogInformation($"Inserted user:{user.Username} into the `users` table.");
+            Global.Logger.LogInformation($"Inserted user:\"{user.Username}\" into the `users` table.");
         }
 
         public void InsertUser(User.User user)
@@ -42,9 +62,43 @@ namespace FOMessenger.Code.Storage.Database
             throw new NotImplementedException();
         }
 
-        public void RetrieveUser(string username)
+        private void RetrieveUserFromUsers(string username, ref User.User user)
         {
-            throw new NotImplementedException();
+            string command = $"SELECT * FROM `users` WHERE `Username` LIKE '{username}';";
+            MySqlCommand cmd = new MySqlCommand(command, DatabaseConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            
+            while (reader.Read())
+            {
+                string password = reader.GetString(1);
+                string email = reader.GetString(2);
+                string firstName = reader.GetString(3);
+                string lastName = reader.GetString(4);
+                DateOnly birthdate = DateOnly.ParseExact(reader.GetDateTime(5).ToString("yyyy-MM-dd"), "yyyy-MM-dd");
+
+                user = new User.User(username, password, email, firstName, lastName, birthdate);
+            }
+
+            reader.Close();
+            reader.Dispose();
+            cmd.Dispose();
+
+            Global.Logger.LogInformation($"Retrieved user:\"{username}\" from the `users` table.");
+        }
+
+        public User.User RetrieveUser(string username)
+        {
+            Global.Logger.LogInformation($"Retrieving user with username: \"{username}\"...");
+
+            User.User user = new User.User();
+
+            RetrieveUserFromUsers(username, ref user);
+
+            RetrieveUserFromUserActivities(username, ref user);
+
+            Global.Logger.LogInformation($"Retrieved user with username: \"{username}\".");
+
+            return user;
         }
     }
 }
