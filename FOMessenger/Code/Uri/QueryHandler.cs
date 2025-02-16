@@ -22,9 +22,9 @@ namespace FOMessenger.Code.Uri
         {
             get
             {
-                if (DoesKeyExist(key))
+                if (DoesKeyExist(key.ToLower()))
                 {
-                    return GetString(key);
+                    return GetString(key.ToLower());
                 }
                 else
                 {
@@ -46,7 +46,7 @@ namespace FOMessenger.Code.Uri
         {
             try
             {
-                return QueryMap.ContainsKey(key) && QueryMap.TryGetValue(key, out _) && QueryMap[key] != null;
+                return QueryMap.ContainsKey(key.ToLower()) && QueryMap.TryGetValue(key.ToLower(), out _) && QueryMap[key.ToLower()] != null;
             }
             catch
             {
@@ -64,7 +64,7 @@ namespace FOMessenger.Code.Uri
 
         public string GetString(string key)
         {
-            if (QueryMap.TryGetValue(key, out string? value))
+            if (QueryMap.TryGetValue(key.ToLower(), out string? value))
             {
                 return value;
             }
@@ -76,7 +76,7 @@ namespace FOMessenger.Code.Uri
 
         public bool GetBoolean(string key)
         {
-            if (QueryMap.TryGetValue(key, out string? value))
+            if (QueryMap.TryGetValue(key.ToLower(), out string? value))
             {
                 try
                 {
@@ -97,7 +97,7 @@ namespace FOMessenger.Code.Uri
 
         public decimal GetDecimal(string key)
         {
-            if (QueryMap.TryGetValue(key, out string? value))
+            if (QueryMap.TryGetValue(key.ToLower(), out string? value))
             {
                 return Convert.ToDecimal(value);
             }
@@ -109,7 +109,7 @@ namespace FOMessenger.Code.Uri
 
         public float GetFloat(string key)
         {
-            if (QueryMap.TryGetValue(key, out string? value))
+            if (QueryMap.TryGetValue(key.ToLower(), out string? value))
             {
                 return float.Parse(value);
             }
@@ -121,7 +121,7 @@ namespace FOMessenger.Code.Uri
 
         public double GetDouble(string key)
         {
-            if (QueryMap.TryGetValue(key, out string? value))
+            if (QueryMap.TryGetValue(key.ToLower(), out string? value))
             {
                 return Convert.ToDouble(value);
             }

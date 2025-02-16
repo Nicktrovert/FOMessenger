@@ -3,7 +3,7 @@
 @inject DatabaseManager DBMan;
 @inject LocalStorageHandler LocalStorage;
 @inject NavigationManager NavMan;
-@inject QueryHandler queryParser;
+@inject QueryHandler queryHandler;
 
 <Navbar></Navbar>
 
@@ -23,6 +23,15 @@
     protected override void OnInitialized()
     {
         Global.Logger.LogInformation($"{guid} - Page Opened.");
+        try
+        {
+            queryHandler.Parse(NavMan);
+            Global.Logger.LogInformation($"query Name via Accessor []: {queryHandler["name"]}");
+            Global.Logger.LogInformation($"query Name via GetValue<string>(): {queryHandler.GetValue<string>("name")}");
+            Global.Logger.LogInformation($"query Name via GetString(): {queryHandler.GetString("name")}");
+            Global.Logger.LogInformation($"query Name via Dictionary: {queryHandler.QueryMap["name"]}");
+        }
+        catch { }
         base.OnInitialized();
     }
 
