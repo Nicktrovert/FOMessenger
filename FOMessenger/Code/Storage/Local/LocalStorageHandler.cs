@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FOMessenger.Code.Storage.Local
 {
@@ -14,54 +15,84 @@ namespace FOMessenger.Code.Storage.Local
         }
 
 
-
-
         public void StoreValue<T>(T value, string keySuffix)
         {
-            _protectedLocalStorage.SetAsync(_storageKey + "-" + keySuffix, JsonConvert.SerializeObject(value));
+            Task task = new Task(async () => await StoreValueAsync<T>(value, keySuffix));
+            task.Start();
+            task.Wait();
         }
 
-        public async Task StoreValueAsync<T>(T value, string keySuffix) => await Task.Run(() => StoreValue(value, keySuffix));
+        public async Task StoreValueAsync<T>(T value, string keySuffix)
+        {
+            await _protectedLocalStorage.SetAsync(_storageKey + "-" + keySuffix, JsonConvert.SerializeObject(value));
+        }
 
 
         public void StoreValues<T>(IEnumerable<T> values, string keySuffix)
         {
+            Task task = new Task(async () => await StoreValuesAsync<T>(values, keySuffix));
+            task.Start();
+            task.Wait();
+        }
+
+        public async Task StoreValuesAsync<T>(IEnumerable<T> values, string keySuffix)
+        {
             List<T> list = values.ToList();
 
-            int pos = -1;
+            int pos = 0;
 
-            do
+            while ((await _protectedLocalStorage.GetAsync<string>(_storageKey + "-" + keySuffix + "-" + pos)).Value != null)
             {
+                await _protectedLocalStorage.DeleteAsync(_storageKey + "-" + keySuffix + "-" + pos);
                 pos++;
-                _protectedLocalStorage.DeleteAsync(_storageKey + "-" + keySuffix + "-" + pos);
-            } while (_protectedLocalStorage.GetAsync<string>(_storageKey + "-" + keySuffix + "-" + (pos + 1)).Result.Value != null);
+            }
 
             for (int i = 0; i < list.Count; i++)
             {
-                _protectedLocalStorage.SetAsync(_storageKey + "-" + keySuffix + "-" + i, JsonConvert.SerializeObject(list[i]));
+                await _protectedLocalStorage.SetAsync(_storageKey + "-" + keySuffix + "-" + i, JsonConvert.SerializeObject(list[i]));
             }
         }
-
-        public async Task StoreValuesAsync<T>(IEnumerable<T> values, string keySuffix) => await Task.Run(() => StoreValues(values, keySuffix));
-
-
 
 
         public T RetrieveValue<T>(string keySuffix)
         {
-            throw new NotImplementedException("todo");
+            return RetrieveValueAsync<T>(keySuffix).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public async Task<T> RetrieveValueAsync<T>(string keySuffix) => await Task.Run(() => RetrieveValue<T>(keySuffix));
+        public async Task<T> RetrieveValueAsync<T>(string keySuffix)
+        {
+            Task<string?> task = new Task<string?>(() => _protectedLocalStorage.GetAsync<string?>(_storageKey + "-" + keySuffix).ConfigureAwait(false).GetAwaiter().GetResult().Value);
+            task.Start();
+            task.Wait();
+            string? CurrentString = task.Result;
+            return JsonConvert.DeserializeObject<T>(CurrentString);
+        }
 
 
         public IEnumerable<T> RetrieveValues<T>(string keySuffix)
         {
-            throw new NotImplementedException("todo");
+            Task<IEnumerable<T>> task = new Task<IEnumerable<T>>(() => RetrieveValuesAsync<T>(keySuffix).ConfigureAwait(false).GetAwaiter().GetResult());
+            task.Start();
+            task.Wait();
+            return task.Result;
         }
 
-        public async Task<IEnumerable<T>> RetrieveValuesAsync<T>(string keySuffix) => await Task.Run(() => RetrieveValues<T>(keySuffix));
+        public async Task<IEnumerable<T>> RetrieveValuesAsync<T>(string keySuffix)
+        {
+            List<T> values = new List<T>();
+            int pos = -1;
 
-
+            while (true)
+            {
+                pos++;
+                string? CurrentString = (await _protectedLocalStorage.GetAsync<string?>(_storageKey + "-" + keySuffix + "-" + pos)).Value;
+                if (CurrentString == null)
+                {
+                    break;
+                }
+                values.Add(JsonConvert.DeserializeObject<T>(CurrentString));
+            }
+            return values;
+        }
     }
 }

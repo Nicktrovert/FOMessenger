@@ -7,8 +7,9 @@
 <Navbar></Navbar>
 
 <div class="flex-column justify-center align-center">
-    @for (int i = 0; i < 15; i++)
+    @for (int i = 0; i < 10; i++)
     {
+        <button class="MyButton cursor-pointer" style="margin-top: 1vh;" @onclick="TestLocalStorage">Test LocalStorage</button>
         <button class="MyButton cursor-pointer" style="margin-top: 1vh;" @onclick="TestInsertUser">Test InsertUser</button>
         <button class="MyButton cursor-pointer" style="margin-top: 1vh;" @onclick="TestRetrieveUser">Test RetrieveUser</button>
     }
@@ -27,6 +28,29 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
+    }
+
+    public void TestLocalStorage()
+    {
+        LocalStorage.StoreValue<User>(new User("Test52", Hasher.Hash("TESTESTTEST"), "TESTMAIL@MAIL.COM", "TESTFIRST", "TESTLAST", new DateOnly(2000, 01, 23)), "UserTest");
+
+        StateHasChanged();
+
+        //User user = LocalStorage.RetrieveValue<User>("UserTest"); /*<- shit doesn't work*/
+
+        StateHasChanged();
+
+        List<User> users = new List<User>();
+        for (int i = 0; i < 41; i++)
+        {
+            users.Add(new User($"Nicktrovert{i}", Hasher.Hash($"VeryGoodPassword{i}"), $"MyMail{i}@gmail.com", $"Nick{i}", $"Helmers{i}", new DateOnly(2007, 04, 29)));
+        }
+
+        LocalStorage.StoreValues<User>(users, "UsersTest");
+
+        StateHasChanged();
+
+        //users = LocalStorage.RetrieveValues<User>("UsersTest").ToList(); /*<- shit doesn't work*/
     }
 
     public void TestInsertUser()
