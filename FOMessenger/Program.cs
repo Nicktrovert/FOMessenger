@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Components.Web;
 using FOMessenger.Code;
 using FOMessenger.Code.Storage.Local;
 using FOMessenger.Code.Storage.Database;
+using FOMessenger.Code.Uri;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<LocalStorageHandler>();
 builder.Services.AddScoped<DatabaseManager>();
+builder.Services.AddScoped<QueryHandler>();
 
 var app = builder.Build();
 
